@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc && babel src --out-dir dist --extensions \".ts,.tsx\" --copy-files",
+    "build": "rimraf dist && tsc && babel src --out-dir dist/src --extensions \".ts,.tsx\" --copy-files && node scripts/post-build.js",
     "validate": "node validate-dist.js",
     "prepare": "npm run build && npm run validate"
   },
