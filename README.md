@@ -48,6 +48,28 @@ yarn add git+https://github.com/alejandrojaimejimenez/epub-library-reader.git
 yarn add epubjs react-native-webview
 ```
 
+#### Usar siempre la última versión disponible
+
+Para asegurarte de que tu proyecto siempre use la última versión disponible de este componente, puedes modificar directamente tu `package.json` de la siguiente manera:
+
+```json
+"dependencies": {
+  "epub-library-reader": "github:alejandrojaimejimenez/epub-library-reader"
+}
+```
+
+Con esta configuración, cada vez que ejecutes `npm update` o `yarn upgrade`, obtendrás automáticamente la última versión de la rama principal del repositorio.
+
+Para actualizar manualmente a la última versión en cualquier momento:
+
+```bash
+# Con npm
+npm update epub-library-reader
+
+# Con yarn
+yarn upgrade epub-library-reader
+```
+
 Luego puedes importarlo directamente:
 
 ```tsx
@@ -469,6 +491,33 @@ MIT
 ### Problemas al instalar desde GitHub
 
 Si experimentas errores al instalar el paquete directamente desde GitHub, como conflictos de dependencias o errores de versiones incompatibles, considera usar la instalación manual (Opción 2).
+
+### Problemas al actualizar a la última versión
+
+Si estás usando la configuración para mantener siempre la última versión (con `github:alejandrojaimejimenez/epub-library-reader` en tu package.json) y experimentas problemas después de una actualización:
+
+1. **Borrar la caché de npm/yarn:**
+   ```bash
+   # Para npm
+   npm cache clean --force
+   
+   # Para yarn
+   yarn cache clean
+   ```
+
+2. **Borrar node_modules y reinstalar:**
+   ```bash
+   rm -rf node_modules
+   npm install
+   # o yarn install
+   ```
+
+3. **Si el problema persiste**, puedes fijar temporalmente la versión a un commit específico o tag estable:
+   ```json
+   "dependencies": {
+     "epub-library-reader": "github:alejandrojaimejimenez/epub-library-reader#v0.1.0"
+   }
+   ```
 
 **Errores comunes y soluciones:**
 

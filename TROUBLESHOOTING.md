@@ -93,3 +93,39 @@ npm install react-native-reanimated
   ```bash
   npx react-native link react-native-webview
   ```
+
+## Problemas al actualizar a la última versión
+
+Si estás utilizando la referencia directa al repositorio GitHub en tu package.json para mantener siempre la última versión, puedes encontrar algunos problemas después de actualizaciones importantes.
+
+### La actualización no se aplica
+
+A veces npm o yarn pueden no detectar los cambios en el repositorio remoto. Prueba lo siguiente:
+
+```bash
+# Para forzar la actualización con npm
+npm cache clean --force
+npm update epub-library-reader --force
+
+# Para forzar la actualización con yarn
+yarn cache clean
+yarn upgrade epub-library-reader --latest
+```
+
+### Conflictos después de la actualización
+
+Si después de actualizar a la última versión encuentras errores o comportamientos inesperados:
+
+1. **Verifica tus versiones de dependencias**: Asegúrate de que las versiones de `react-native-webview` y `epubjs` son compatibles con la última versión del componente.
+
+2. **Comprueba los cambios recientes**: Revisa el [CHANGELOG.md](https://github.com/alejandrojaimejimenez/epub-library-reader/blob/main/CHANGELOG.md) para ver si ha habido cambios significativos en la API.
+
+3. **Vuelve temporalmente a una versión estable**: Si necesitas estabilidad, especifica un tag o commit específico:
+
+```json
+"dependencies": {
+  "epub-library-reader": "github:alejandrojaimejimenez/epub-library-reader#v0.1.0"
+}
+```
+
+4. **Reporta el problema**: Si consideras que es un bug, abre un issue en el repositorio de GitHub.

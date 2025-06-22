@@ -5,6 +5,17 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-06-25
+
+### Añadido
+- Documentación sobre cómo usar siempre la última versión del repositorio
+- Sección en README.md sobre configuración de package.json para referencias a GitHub
+- Guía en TROUBLESHOOTING.md para resolver problemas de actualización
+- Instrucciones para forzar actualizaciones con npm y yarn
+
+### Modificado
+- Mejora de documentación para facilitar integración continua con proyectos consumidores
+
 ## [0.1.0] - 2025-06-22
 
 ### Añadido
