@@ -1,13 +1,29 @@
 {
   "name": "epub-library-reader",
   "version": "1.0.0",
+  "description": "Un componente para la lectura de archivos EPUB en aplicaciones React Native con TypeScript y Expo",
   "main": "index.ts",
+  "types": "index.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "prepare": "expo-module prepare"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alejandrojaimejimenez/epub-library-reader.git"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "epub",
+    "ebook",
+    "reader"
+  ],
+  "author": "Alejandro Jaime Jimenez",
+  "license": "MIT",
   "dependencies": {
     "@expo/webpack-config": "^19.0.1",
     "epubjs": "^0.3.93",
@@ -24,5 +40,12 @@
     "@types/react": "~19.0.10",
     "typescript": "~5.8.3"
   },
-  "private": true
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "expo-file-system": "*",
+    "react-native-webview": "*",
+    "epubjs": "*"
+  },
+  "private": false
 }

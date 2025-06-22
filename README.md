@@ -27,17 +27,69 @@ Un componente para la lectura de archivos EPUB en aplicaciones React Native con 
 
 ## Instalación
 
-### 1. Instalar las dependencias necesarias
+### Opción 1: Instalar desde GitHub
+
+Puedes instalar este componente directamente desde GitHub:
+
+```bash
+npm install git+https://github.com/alejandrojaimejimenez/epub-library-reader.git
+```
+
+o usando yarn:
+
+```bash
+yarn add git+https://github.com/alejandrojaimejimenez/epub-library-reader.git
+```
+
+Luego puedes importarlo directamente:
+
+```tsx
+import { EpubReader } from 'epub-library-reader';
+```
+
+### Opción 2: Instalación manual
+
+1. Instalar las dependencias necesarias:
 
 ```bash
 npx expo install epubjs react-native-webview expo-file-system
 ```
 
-### 2. Copiar el componente
+2. Copiar el componente:
 
 Copia el archivo `src/components/EpubReader.tsx` de este repositorio a tu proyecto.
 
 ## Uso básico
+
+### Si instalaste desde npm o GitHub:
+
+```tsx
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { EpubReader } from 'epub-library-reader';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <EpubReader
+        source={{ uri: 'https://ejemplo.com/mi-libro.epub' }}
+        defaultTheme="light"
+        defaultFontSize={18}
+        onReady={() => console.log('El libro está listo')}
+        onLocationChange={(cfi) => console.log('Ubicación actual:', cfi)}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+```
+
+### Si copiaste manualmente el componente:
 
 ```tsx
 import React from 'react';
@@ -93,6 +145,8 @@ El componente `EpubReader` acepta las siguientes propiedades:
 ### Cargar un archivo EPUB desde una URL
 
 ```tsx
+import { EpubReader } from 'epub-library-reader';
+
 <EpubReader
   source={{ uri: 'https://ejemplo.com/mi-libro.epub' }}
   onReady={() => console.log('El libro está listo')}
@@ -102,6 +156,8 @@ El componente `EpubReader` acepta las siguientes propiedades:
 ### Cargar un archivo OPF desde una URL
 
 ```tsx
+import { EpubReader } from 'epub-library-reader';
+
 <EpubReader
   source={{ uri: 'https://ejemplo.com/libro/package.opf' }}
   onReady={() => console.log('El libro está listo')}
@@ -111,6 +167,7 @@ El componente `EpubReader` acepta las siguientes propiedades:
 ### Cargar un archivo local en dispositivos móviles
 
 ```tsx
+import { EpubReader } from 'epub-library-reader';
 import * as FileSystem from 'expo-file-system';
 
 // En tu componente:
@@ -125,7 +182,9 @@ const filePath = FileSystem.documentDirectory + 'mi-libro.epub';
 ### Cargar un archivo usando datos Base64
 
 ```tsx
+import { EpubReader } from 'epub-library-reader';
 import * as FileSystem from 'expo-file-system';
+import { useState } from 'react';
 
 // Función para leer un archivo como Base64
 const readEpubAsBase64 = async (filePath) => {
@@ -134,6 +193,9 @@ const readEpubAsBase64 = async (filePath) => {
   });
   return base64;
 };
+
+// En tu componente:
+const [bookData, setBookData] = useState('');
 
 // En una función asíncrona:
 const loadBook = async () => {
@@ -155,6 +217,8 @@ const loadBook = async () => {
 ### Personalizar el tema y tamaño de fuente
 
 ```tsx
+import { EpubReader } from 'epub-library-reader';
+
 <EpubReader
   source={{ uri: 'https://ejemplo.com/mi-libro.epub' }}
   defaultTheme="sepia"
@@ -168,7 +232,7 @@ const loadBook = async () => {
 ```tsx
 import React, { useRef } from 'react';
 import { View, Button } from 'react-native';
-import EpubReader from './ruta/a/EpubReader';
+import { EpubReader } from 'epub-library-reader';
 
 export default function App() {
   const epubRef = useRef(null);
@@ -201,8 +265,9 @@ export default function App() {
 ### Guardar la posición de lectura
 
 ```tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { EpubReader } from 'epub-library-reader';
 
 export default function App() {
   const [currentCfi, setCurrentCfi] = useState('');
@@ -210,7 +275,7 @@ export default function App() {
   const storageKey = `book-position-${bookUrl}`;
 
   // Cargar posición guardada
-  React.useEffect(() => {
+  useEffect(() => {
     const loadPosition = async () => {
       try {
         const savedPosition = await AsyncStorage.getItem(storageKey);
