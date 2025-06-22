@@ -198,6 +198,42 @@ import { EpubReader } from 'epub-library-reader';
 />
 ```
 
+### Cargar un archivo EPUB desde un Blob URL (navegador web)
+
+A partir de la versión 0.1.3, el componente también soporta URLs de tipo blob generados por el navegador:
+
+```tsx
+import { EpubReader } from 'epub-library-reader';
+
+// En el contexto de un componente React
+const MyComponent = () => {
+  const [blobUrl, setBlobUrl] = useState(null);
+  
+  useEffect(() => {
+    // Ejemplo: Obtener un archivo y crear un blob URL
+    fetch('https://ejemplo.com/mi-libro.epub')
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        setBlobUrl(url);
+      });
+  }, []);
+  
+  return (
+    <>
+      {blobUrl && (
+        <EpubReader
+          source={{ uri: blobUrl }}
+          onReady={() => console.log('El libro está listo')}
+        />
+      )}
+    </>
+  );
+};
+```
+
+> **Nota importante**: Los Blob URLs son específicos del contexto del navegador donde fueron creados. Esto funciona en la plataforma web pero no en aplicaciones nativas iOS/Android.
+
 ### Cargar un archivo EPUB desde una URL con posición inicial
 
 ```tsx

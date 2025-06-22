@@ -94,6 +94,31 @@ npm install react-native-reanimated
   npx react-native link react-native-webview
   ```
 
+## Problemas con los Blob URLs
+
+A partir de la versión 0.1.3, el componente soporta URLs de tipo blob (que comienzan con `blob:`). Sin embargo, hay algunas consideraciones importantes:
+
+### El EPUB no se carga desde un Blob URL
+
+Si estás experimentando problemas al cargar un EPUB desde un Blob URL:
+
+1. **Verifica el contexto del Blob URL**: Los Blob URLs son específicos del contexto donde fueron creados. Un Blob URL creado en el contexto principal de la aplicación no será accesible directamente desde dentro de un WebView.
+
+2. **Solo funciona en plataforma web**: El soporte para Blob URLs solo está garantizado en la plataforma web (React Native Web). No funcionará en aplicaciones nativas de iOS o Android.
+
+3. **Alternativa para todas las plataformas**: Si necesitas compatibilidad multiplataforma, convierte el blob a una cadena base64:
+
+```javascript
+// Convertir blob a base64
+const reader = new FileReader();
+reader.onload = () => {
+  const base64data = reader.result;
+  // Usar base64data en el componente EpubReader
+  // <EpubReader source={{ base64: base64data }} />
+};
+reader.readAsDataURL(blob);
+```
+
 ## Problemas al actualizar a la última versión
 
 Si estás utilizando la referencia directa al repositorio GitHub en tu package.json para mantener siempre la última versión, puedes encontrar algunos problemas después de actualizaciones importantes.

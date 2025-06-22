@@ -176,10 +176,9 @@ const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
                   document.getElementById('viewer').innerHTML = '<div class="loading-message">Inicializando libro...</div>';
                   
                   // Inicializar el libro con los datos recibidos
-                  let book;
-                  
-                  if (bookData.startsWith('http') || bookData.startsWith('file')) {
-                    // Si es una URL o una ruta de archivo
+                  let book;                  
+                  if (bookData.startsWith('http') || bookData.startsWith('file') || bookData.startsWith('blob:')) {
+                    // Si es una URL, una ruta de archivo o un blob URL
                     book = ePub(bookData);
                   } else {
                     // Si es Base64, convertirlo a un objeto Blob
