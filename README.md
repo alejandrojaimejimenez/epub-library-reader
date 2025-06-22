@@ -384,6 +384,24 @@ El componente expone los siguientes métodos que pueden ser accedidos a través 
 
 Este componente utiliza [react-native-webview](https://github.com/react-native-webview/react-native-webview) como contenedor y [epubjs](https://github.com/futurepress/epub.js/) para procesar y renderizar los archivos EPUB. La comunicación entre React Native y WebView se realiza mediante mensajes, permitiendo el control del libro desde el lado de React Native.
 
+## Información para desarrolladores
+
+### Archivos precompilados
+
+Este repositorio incluye la carpeta `/dist` con archivos JavaScript precompilados, lo que permite:
+
+- Usar el componente directamente en proyectos sin TypeScript
+- Evitar errores de compilación en proyectos con diferentes configuraciones
+- Importar el paquete sin necesidad de transpilación adicional
+
+Si haces cambios en el código fuente, asegúrate de volver a compilar el paquete con:
+
+```bash
+npm run build
+```
+
+Y luego incluir los cambios de la carpeta `/dist` en tu commit.
+
 ## Solución de problemas
 
 Si estás teniendo problemas al integrar o utilizar el componente, consulta nuestra [guía de solución de problemas](TROUBLESHOOTING.md) que incluye soluciones para:
