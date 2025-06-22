@@ -547,8 +547,7 @@ const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
           <ActivityIndicator size="large" color="#0000ff" />
           <Text style={styles.loadingText}>Cargando libro...</Text>
         </View>
-      )}
-      
+      )}      
       {bookContent && (
         <WebView
           ref={webViewRef}
@@ -645,8 +644,7 @@ const styles = StyleSheet.create({
   },
   pageInfo: {
     fontSize: 14,
-    color: '#333',
-  },
+    color: '#333',  },
 });
 
 export default EpubReader;

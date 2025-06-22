@@ -5,6 +5,14 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2025-06-25
+
+### Corregido
+- Mejorado el soporte para referencias (refs) en el componente EpubReader
+- Corregida la ruta de exportación para EpubReaderRef en index.d.ts
+- Eliminados comentarios problemáticos en los archivos JavaScript compilados
+- Mejorada la compatibilidad con proyectos React Native y Expo
+
 ## [0.1.3] - 2025-06-25
 
 ### Añadido
