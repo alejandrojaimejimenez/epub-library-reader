@@ -5,11 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "build": "tsc"
+    "build": "rimraf dist && tsc && babel src --out-dir dist --extensions \".ts,.tsx\" --copy-files",
+    "validate": "node validate-dist.js",
+    "prepare": "npm run build && npm run validate"
   },
   "repository": {
     "type": "git",
@@ -25,13 +23,29 @@
   "author": "Alejandro Jaime Jimenez",
   "license": "MIT",
   "dependencies": {
-    "epubjs": "^0.3.93"
+    "epubjs": "*"
   },
   "peerDependencies": {
+    "epubjs": "*",
     "react": "*",
     "react-native": "*",
-    "react-native-webview": "*",
-    "epubjs": "*"
+    "react-native-webview": "*"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-private-methods": "^7.27.1",
+    "@babel/plugin-transform-private-property-in-object": "^7.27.1",
+    "@babel/plugin-transform-react-jsx": "^7.27.1",
+    "@babel/preset-env": "^7.23.0",
+    "@babel/preset-react": "^7.23.0",
+    "@babel/preset-typescript": "^7.23.0",
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.72.0",
+    "react-native-webview": "^13.15.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.0.0"
   },
   "private": false
 }
