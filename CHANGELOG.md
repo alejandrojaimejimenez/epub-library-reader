@@ -5,6 +5,14 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2025-06-25
+
+### Corregido
+- Solucionado el error "Unexpected text node" que ocurría dentro de componentes View
+- Corregido el problema con referencias a componentes funcionales
+- Arreglada la ruta de exportación inconsistente para EpubReaderRef en index.d.ts
+- Eliminados comentarios innecesarios en archivos compilados que causaban problemas
+
 ## [0.1.1] - 2025-06-25
 
 ### Añadido
