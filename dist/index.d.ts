@@ -1,1 +1,1 @@
-export { default as EpubReader } from './components/EpubReader';
+export { default as EpubReader, EpubReaderRef } from './src/components/EpubReader';

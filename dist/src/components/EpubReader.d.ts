@@ -1,6 +1,4 @@
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
-import { WebView } from 'react-native-webview';
-
+import React from 'react';
 interface EpubReaderProps {
     source: {
         uri?: string;
@@ -18,7 +16,6 @@ interface EpubReaderProps {
     showControls?: boolean;
     initialLocation?: string;
 }
-
 export interface EpubReaderRef {
     nextPage: () => void;
     prevPage: () => void;
@@ -27,6 +24,5 @@ export interface EpubReaderRef {
     setFontSize: (size: number) => void;
     setFontFamily: (fontFamily: string) => void;
 }
-
-declare const EpubReader: ForwardRefExoticComponent<EpubReaderProps & RefAttributes<EpubReaderRef>>;
+declare const EpubReader: React.ForwardRefExoticComponent<EpubReaderProps & React.RefAttributes<EpubReaderRef>>;
 export default EpubReader;

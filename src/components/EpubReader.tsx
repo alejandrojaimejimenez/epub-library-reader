@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import {
   View,
   StyleSheet,
@@ -29,7 +29,18 @@ interface EpubReaderProps {
   initialLocation?: string; // CFI para navegar a una posición específica al cargar
 }
 
-const EpubReader: React.FC<EpubReaderProps> = ({
+// Definimos la interfaz para las funciones que expondremos a través de la ref
+export interface EpubReaderRef {
+  nextPage: () => void;
+  prevPage: () => void;
+  setLocation: (cfi: string) => void;
+  setTheme: (theme: 'light' | 'dark' | 'sepia') => void;
+  setFontSize: (size: number) => void;
+  setFontFamily: (fontFamily: string) => void;
+}
+
+// Utilizamos forwardRef para permitir pasar referencias al componente
+const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
   source,
   onLocationChange,
   onReady,
@@ -42,7 +53,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
   defaultFontFamily = 'system',
   showControls = true,
   initialLocation,
-}) => {
+}, ref) => {
   const webViewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,6 +66,47 @@ const EpubReader: React.FC<EpubReaderProps> = ({
     // Preparar el libro
     prepareBook();
   }, [source]);
+
+  // Exponemos las funciones que queremos que sean accesibles a través de la ref
+  useImperativeHandle(ref, () => ({
+    nextPage: () => {
+      if (webViewRef.current) {
+        const message = JSON.stringify({ type: 'nextPage' });
+        webViewRef.current.postMessage(message);
+      }
+    },
+    prevPage: () => {
+      if (webViewRef.current) {
+        const message = JSON.stringify({ type: 'prevPage' });
+        webViewRef.current.postMessage(message);
+      }
+    },
+    setLocation: (cfi: string) => {
+      if (webViewRef.current) {
+        const message = JSON.stringify({ type: 'setLocation', cfi });
+        webViewRef.current.postMessage(message);
+      }
+    },
+    setTheme: (theme: 'light' | 'dark' | 'sepia') => {
+      if (webViewRef.current) {
+        const message = JSON.stringify({ type: 'setTheme', theme });
+        webViewRef.current.postMessage(message);
+      }
+    },
+    setFontSize: (size: number) => {
+      if (webViewRef.current) {
+        const message = JSON.stringify({ type: 'setFontSize', size });
+        webViewRef.current.postMessage(message);
+      }
+    },
+    setFontFamily: (fontFamily: string) => {
+      if (webViewRef.current) {
+        const message = JSON.stringify({ type: 'setFontFamily', fontFamily });
+        webViewRef.current.postMessage(message);
+      }
+    }
+  }));
+
   const prepareBook = async () => {
     try {
       setLoading(true);
@@ -465,7 +517,8 @@ const EpubReader: React.FC<EpubReaderProps> = ({
       console.error('Error al procesar mensaje:', err);
     }
   };
-
+  // Estas funciones ahora están disponibles a través de la ref usando useImperativeHandle
+  // También las definimos localmente para los botones de navegación
   const nextPage = () => {
     if (webViewRef.current) {
       const message = JSON.stringify({ type: 'nextPage' });
@@ -476,34 +529,6 @@ const EpubReader: React.FC<EpubReaderProps> = ({
   const prevPage = () => {
     if (webViewRef.current) {
       const message = JSON.stringify({ type: 'prevPage' });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setLocation = (cfi: string) => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({ type: 'setLocation', cfi });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setTheme = (theme: 'light' | 'dark' | 'sepia') => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({ type: 'setTheme', theme });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setFontSize = (size: number) => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({ type: 'setFontSize', size });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setFontFamily = (fontFamily: string) => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({ type: 'setFontFamily', fontFamily });
       webViewRef.current.postMessage(message);
     }
   };
@@ -572,7 +597,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
       )}
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

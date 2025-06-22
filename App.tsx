@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Alert, Switch } from 'react-native';
-import EpubReader from './src/components/EpubReader';
+import EpubReader, { EpubReaderRef } from './src/components/EpubReader';
 import { WebView } from 'react-native-webview';
 
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'sepia'>('light');
   const [fontSize, setFontSize] = useState(18);
   const [showControls, setShowControls] = useState(true);
-  const epubReaderRef = useRef<{ nextPage: () => void; prevPage: () => void }>(null);
+  const epubReaderRef = useRef<EpubReaderRef>(null);
 
   // URLs de ejemplo de archivos EPUB
   const sampleEpubUrl = 'https://s3.amazonaws.com/epubjs.org/books/alice.epub';
@@ -37,6 +37,7 @@ export default function App() {
         </View>
         
         <EpubReader
+          ref={epubReaderRef}
           source={{ uri: sampleEpubUrl }}
           defaultTheme={theme}
           defaultFontSize={fontSize}

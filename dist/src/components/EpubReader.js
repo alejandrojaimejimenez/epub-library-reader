@@ -1,91 +1,108 @@
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _reactNative = require("react-native");
-
-var _reactNativeWebview = require("react-native-webview");
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-// Utilizamos forwardRef para permitir pasar referencias al componente
-const EpubReader = /*#__PURE__*/_react.default.forwardRef(({  source,
-  onLocationChange,
-  onReady,
-  onPress,
-  onError,
-  width = _reactNative.Dimensions.get('window').width,
-  height = _reactNative.Dimensions.get('window').height,
-  defaultTheme = 'light',
-  defaultFontSize = 16,
-  defaultFontFamily = 'system',
-  showControls = true,
-  initialLocation
-}, ref) => {
-  const webViewRef = (0, _react.useRef)(null);
-  const [loading, setLoading] = (0, _react.useState)(true);
-  const [error, setError] = (0, _react.useState)(null);
-  const [bookContent, setBookContent] = (0, _react.useState)(null);
-  const [currentLocation, setCurrentLocation] = (0, _react.useState)('');
-  const [totalPages, setTotalPages] = (0, _react.useState)(0);
-  const [currentPage, setCurrentPage] = (0, _react.useState)(0);  (0, _react.useEffect)(() => {
-    // Preparar el libro
-    prepareBook();
-  }, [source]);
-
-  // Exponemos las funciones que queremos que sean accesibles a través de la ref
-  (0, _react.useImperativeHandle)(ref, () => ({
-    nextPage: () => {
-      if (webViewRef.current) {
-        const message = JSON.stringify({ type: 'nextPage' });
-        webViewRef.current.postMessage(message);
-      }
-    },
-    prevPage: () => {
-      if (webViewRef.current) {
-        const message = JSON.stringify({ type: 'prevPage' });
-        webViewRef.current.postMessage(message);
-      }
-    },
-    setLocation: (cfi) => {
-      if (webViewRef.current) {
-        const message = JSON.stringify({ type: 'setLocation', cfi });
-        webViewRef.current.postMessage(message);
-      }
-    },
-    setTheme: (theme) => {
-      if (webViewRef.current) {
-        const message = JSON.stringify({ type: 'setTheme', theme });
-        webViewRef.current.postMessage(message);
-      }
-    },
-    setFontSize: (size) => {
-      if (webViewRef.current) {
-        const message = JSON.stringify({ type: 'setFontSize', size });
-        webViewRef.current.postMessage(message);
-      }
-    },
-    setFontFamily: (fontFamily) => {
-      if (webViewRef.current) {
-        const message = JSON.stringify({ type: 'setFontFamily', fontFamily });
-        webViewRef.current.postMessage(message);
-      }
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
-  }));
-
-  const prepareBook = async () => {
-    try {
-      setLoading(true);
-      setError(null); // HTML que contiene la estructura básica para epubjs
-
-      const htmlContent = `
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importStar(require("react"));
+const react_native_1 = require("react-native");
+const react_native_webview_1 = require("react-native-webview");
+// Utilizamos forwardRef para permitir pasar referencias al componente
+const EpubReader = (0, react_1.forwardRef)(({ source, onLocationChange, onReady, onPress, onError, width = react_native_1.Dimensions.get('window').width, height = react_native_1.Dimensions.get('window').height, defaultTheme = 'light', defaultFontSize = 16, defaultFontFamily = 'system', showControls = true, initialLocation, }, ref) => {
+    const webViewRef = (0, react_1.useRef)(null);
+    const [loading, setLoading] = (0, react_1.useState)(true);
+    const [error, setError] = (0, react_1.useState)(null);
+    const [bookContent, setBookContent] = (0, react_1.useState)(null);
+    const [currentLocation, setCurrentLocation] = (0, react_1.useState)('');
+    const [totalPages, setTotalPages] = (0, react_1.useState)(0);
+    const [currentPage, setCurrentPage] = (0, react_1.useState)(0);
+    (0, react_1.useEffect)(() => {
+        // Preparar el libro
+        prepareBook();
+    }, [source]);
+    // Exponemos las funciones que queremos que sean accesibles a través de la ref
+    (0, react_1.useImperativeHandle)(ref, () => ({
+        nextPage: () => {
+            if (webViewRef.current) {
+                const message = JSON.stringify({ type: 'nextPage' });
+                webViewRef.current.postMessage(message);
+            }
+        },
+        prevPage: () => {
+            if (webViewRef.current) {
+                const message = JSON.stringify({ type: 'prevPage' });
+                webViewRef.current.postMessage(message);
+            }
+        },
+        setLocation: (cfi) => {
+            if (webViewRef.current) {
+                const message = JSON.stringify({ type: 'setLocation', cfi });
+                webViewRef.current.postMessage(message);
+            }
+        },
+        setTheme: (theme) => {
+            if (webViewRef.current) {
+                const message = JSON.stringify({ type: 'setTheme', theme });
+                webViewRef.current.postMessage(message);
+            }
+        },
+        setFontSize: (size) => {
+            if (webViewRef.current) {
+                const message = JSON.stringify({ type: 'setFontSize', size });
+                webViewRef.current.postMessage(message);
+            }
+        },
+        setFontFamily: (fontFamily) => {
+            if (webViewRef.current) {
+                const message = JSON.stringify({ type: 'setFontFamily', fontFamily });
+                webViewRef.current.postMessage(message);
+            }
+        }
+    }));
+    const prepareBook = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            setLoading(true);
+            setError(null);
+            // HTML que contiene la estructura básica para epubjs
+            const htmlContent = `
         <!DOCTYPE html>
         <html>
           <head>
@@ -206,8 +223,7 @@ const EpubReader = /*#__PURE__*/_react.default.forwardRef(({  source,
                       message: 'Error al mostrar el contenido: ' + error.message
                     }));
                   });
-                  
-                  // Generar ubicaciones para el cálculo de páginas (opcional pero recomendado)
+                    // Generar ubicaciones para el cálculo de páginas (opcional pero recomendado)
                   book.ready.then(() => {
                     // Crear ubicaciones para cálculo más preciso del número de páginas
                     if (!book.locations.length()) {
@@ -421,262 +437,173 @@ const EpubReader = /*#__PURE__*/_react.default.forwardRef(({  source,
           </body>
         </html>
       `;
-      let bookSource = '';
-
-      if (source.uri) {
-        // Si recibimos una URI directa (URL remota)
-        bookSource = source.uri;
-      } else if (source.base64) {
-        // Si recibimos datos en base64
-        bookSource = source.base64;
-      } else {
-        throw new Error('Se requiere una fuente válida (uri o base64)');
-      } // Establecer el contenido HTML
-
-
-      setBookContent(htmlContent); // Esperamos un poco para asegurarnos de que el WebView esté listo
-
-      setTimeout(() => {
-        if (webViewRef.current) {
-          const bookDataScript = `initBook("${bookSource}");`;
-          webViewRef.current.injectJavaScript(bookDataScript);
+            let bookSource = '';
+            if (source.uri) {
+                // Si recibimos una URI directa (URL remota)
+                bookSource = source.uri;
+            }
+            else if (source.base64) {
+                // Si recibimos datos en base64
+                bookSource = source.base64;
+            }
+            else {
+                throw new Error('Se requiere una fuente válida (uri o base64)');
+            }
+            // Establecer el contenido HTML
+            setBookContent(htmlContent);
+            // Esperamos un poco para asegurarnos de que el WebView esté listo
+            setTimeout(() => {
+                if (webViewRef.current) {
+                    const bookDataScript = `initBook("${bookSource}");`;
+                    webViewRef.current.injectJavaScript(bookDataScript);
+                }
+            }, 500);
         }
-      }, 500);
-    } catch (err) {
-      const errorMessage = `Error al preparar el libro: ${err instanceof Error ? err.message : String(err)}`;
-      setError(errorMessage);
-
-      if (onError) {
-        onError(errorMessage);
-      }
-    } finally {
-      setLoading(false);
+        catch (err) {
+            const errorMessage = `Error al preparar el libro: ${err instanceof Error ? err.message : String(err)}`;
+            setError(errorMessage);
+            if (onError) {
+                onError(errorMessage);
+            }
+        }
+        finally {
+            setLoading(false);
+        }
+    });
+    const handleMessage = (event) => {
+        try {
+            const data = JSON.parse(event.nativeEvent.data);
+            switch (data.type) {
+                case 'locationChange':
+                    setCurrentLocation(data.cfi);
+                    setCurrentPage(data.currentPage);
+                    setTotalPages(data.totalPages);
+                    if (onLocationChange) {
+                        onLocationChange(data.cfi);
+                    }
+                    break;
+                case 'ready':
+                    if (data.locations) {
+                        setTotalPages(data.locations);
+                    }
+                    if (onReady) {
+                        onReady();
+                    }
+                    break;
+                case 'press':
+                    if (onPress) {
+                        onPress();
+                    }
+                    break;
+                case 'error':
+                    setError(data.message);
+                    if (onError) {
+                        onError(data.message);
+                    }
+                    break;
+            }
+        }
+        catch (err) {
+            console.error('Error al procesar mensaje:', err);
+        }
+    };
+    // Estas funciones ahora están disponibles a través de la ref usando useImperativeHandle
+    // También las definimos localmente para los botones de navegación
+    const nextPage = () => {
+        if (webViewRef.current) {
+            const message = JSON.stringify({ type: 'nextPage' });
+            webViewRef.current.postMessage(message);
+        }
+    };
+    const prevPage = () => {
+        if (webViewRef.current) {
+            const message = JSON.stringify({ type: 'prevPage' });
+            webViewRef.current.postMessage(message);
+        }
+    };
+    if (error) {
+        return (<react_native_1.View style={[styles.container, { width, height }]}>
+        <react_native_1.Text style={styles.errorText}>Error: {error}</react_native_1.Text>
+      </react_native_1.View>);
     }
-  };
-
-  const handleMessage = event => {
-    try {
-      const data = JSON.parse(event.nativeEvent.data);
-
-      switch (data.type) {
-        case 'locationChange':
-          setCurrentLocation(data.cfi);
-          setCurrentPage(data.currentPage);
-          setTotalPages(data.totalPages);
-
-          if (onLocationChange) {
-            onLocationChange(data.cfi);
-          }
-
-          break;
-
-        case 'ready':
-          if (data.locations) {
-            setTotalPages(data.locations);
-          }
-
-          if (onReady) {
-            onReady();
-          }
-
-          break;
-
-        case 'press':
-          if (onPress) {
-            onPress();
-          }
-
-          break;
-
-        case 'error':
-          setError(data.message);
-
-          if (onError) {
-            onError(data.message);
-          }
-
-          break;
-      }
-    } catch (err) {
-      console.error('Error al procesar mensaje:', err);
-    }
-  };
-
-  const nextPage = () => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({
-        type: 'nextPage'
-      });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const prevPage = () => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({
-        type: 'prevPage'
-      });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setLocation = cfi => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({
-        type: 'setLocation',
-        cfi
-      });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setTheme = theme => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({
-        type: 'setTheme',
-        theme
-      });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setFontSize = size => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({
-        type: 'setFontSize',
-        size
-      });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  const setFontFamily = fontFamily => {
-    if (webViewRef.current) {
-      const message = JSON.stringify({
-        type: 'setFontFamily',
-        fontFamily
-      });
-      webViewRef.current.postMessage(message);
-    }
-  };
-
-  if (error) {
-    return /*#__PURE__*/_react.default.createElement(_reactNative.View, {
-      style: [styles.container, {
-        width,
-        height
-      }]
-    }, /*#__PURE__*/_react.default.createElement(_reactNative.Text, {
-      style: styles.errorText
-    }, "Error: ", error));
-  }
-
-  return /*#__PURE__*/_react.default.createElement(_reactNative.SafeAreaView, {
-    style: [styles.container, {
-      width,
-      height
-    }]
-  }, loading && /*#__PURE__*/_react.default.createElement(_reactNative.View, {
-    style: styles.loadingContainer
-  }, /*#__PURE__*/_react.default.createElement(_reactNative.ActivityIndicator, {
-    size: "large",
-    color: "#0000ff"
-  }), /*#__PURE__*/_react.default.createElement(_reactNative.Text, {
-    style: styles.loadingText
-  }, "Cargando libro...")), bookContent && /*#__PURE__*/_react.default.createElement(_reactNativeWebview.WebView, {
-    ref: webViewRef,
-    originWhitelist: ['*'],
-    source: {
-      html: bookContent
-    },
-    style: styles.webView,
-    javaScriptEnabled: true,
-    domStorageEnabled: true,
-    startInLoadingState: true,
-    onMessage: handleMessage,
-    onLoad: () => setLoading(false),
-    onError: e => {
-      const errorMsg = `Error en WebView: ${e.nativeEvent.description || 'Error desconocido'}`;
-      setError(errorMsg);
-
-      if (onError) {
-        onError(errorMsg);
-      }
-    },
-    // Necesario para evitar problemas en iOS
-    scalesPageToFit: _reactNative.Platform.OS === 'ios',
-    // Para permitir acceso a archivos locales en Android
-    allowFileAccess: true,
-    allowUniversalAccessFromFileURLs: true,
-    allowFileAccessFromFileURLs: true,
-    // Para mejorar el rendimiento
-    cacheEnabled: true
-  }), showControls && /*#__PURE__*/_react.default.createElement(_reactNative.View, {
-    style: styles.navigationControls
-  }, /*#__PURE__*/_react.default.createElement(_reactNative.TouchableOpacity, {
-    style: styles.navButton,
-    onPress: prevPage
-  }, /*#__PURE__*/_react.default.createElement(_reactNative.Text, {
-    style: styles.navButtonText
-  }, "Anterior")), /*#__PURE__*/_react.default.createElement(_reactNative.Text, {
-    style: styles.pageInfo
-  }, currentPage, " / ", totalPages), /*#__PURE__*/_react.default.createElement(_reactNative.TouchableOpacity, {
-    style: styles.navButton,
-    onPress: nextPage
-  }, /*#__PURE__*/_react.default.createElement(_reactNative.Text, {
-    style: styles.navButtonText
-  }, "Siguiente"))));
-};
-
-const styles = _reactNative.StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff'
-  },
-  webView: {
-    flex: 1,
-    backgroundColor: 'transparent'
-  },
-  loadingContainer: { ..._reactNative.StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    zIndex: 10
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    margin: 20,
-    fontSize: 16
-  },
-  navigationControls: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    backgroundColor: '#f9f9f9'
-  },
-  navButton: {
-    padding: 10,
-    backgroundColor: '#007AFF',
-    borderRadius: 5
-  },
-  navButtonText: {
-    color: '#fff',
-    fontWeight: 'bold'
-  },
-  pageInfo: {
-    fontSize: 14,
-    color: '#333'
-  }
+    return (<react_native_1.SafeAreaView style={[styles.container, { width, height }]}>
+      {loading && (<react_native_1.View style={styles.loadingContainer}>
+          <react_native_1.ActivityIndicator size="large" color="#0000ff"/>
+          <react_native_1.Text style={styles.loadingText}>Cargando libro...</react_native_1.Text>
+        </react_native_1.View>)}
+      
+      {bookContent && (<react_native_webview_1.WebView ref={webViewRef} originWhitelist={['*']} source={{ html: bookContent }} style={styles.webView} javaScriptEnabled={true} domStorageEnabled={true} startInLoadingState={true} onMessage={handleMessage} onLoad={() => setLoading(false)} onError={(e) => {
+                const errorMsg = `Error en WebView: ${e.nativeEvent.description || 'Error desconocido'}`;
+                setError(errorMsg);
+                if (onError) {
+                    onError(errorMsg);
+                }
+            }} 
+        // Necesario para evitar problemas en iOS
+        scalesPageToFit={react_native_1.Platform.OS === 'ios'} 
+        // Para permitir acceso a archivos locales en Android
+        allowFileAccess={true} allowUniversalAccessFromFileURLs={true} allowFileAccessFromFileURLs={true} 
+        // Para mejorar el rendimiento
+        cacheEnabled={true}/>)}
+      
+      {/* Controles básicos de navegación - puedes personalizarlos o quitarlos */}
+      {showControls && (<react_native_1.View style={styles.navigationControls}>
+          <react_native_1.TouchableOpacity style={styles.navButton} onPress={prevPage}>
+            <react_native_1.Text style={styles.navButtonText}>Anterior</react_native_1.Text>
+          </react_native_1.TouchableOpacity>
+          
+          <react_native_1.Text style={styles.pageInfo}>
+            {currentPage} / {totalPages}
+          </react_native_1.Text>
+          
+          <react_native_1.TouchableOpacity style={styles.navButton} onPress={nextPage}>
+            <react_native_1.Text style={styles.navButtonText}>Siguiente</react_native_1.Text>
+          </react_native_1.TouchableOpacity>
+        </react_native_1.View>)}
+    </react_native_1.SafeAreaView>);
 });
-
-var _default = EpubReader;
-exports.default = _default;
+const styles = react_native_1.StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    webView: {
+        flex: 1,
+        backgroundColor: 'transparent',
+    },
+    loadingContainer: Object.assign(Object.assign({}, react_native_1.StyleSheet.absoluteFillObject), { justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.9)', zIndex: 10 }),
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+    },
+    errorText: {
+        color: 'red',
+        textAlign: 'center',
+        margin: 20,
+        fontSize: 16,
+    },
+    navigationControls: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#e0e0e0',
+        backgroundColor: '#f9f9f9',
+    },
+    navButton: {
+        padding: 10,
+        backgroundColor: '#007AFF',
+        borderRadius: 5,
+    },
+    navButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    pageInfo: {
+        fontSize: 14,
+        color: '#333',
+    },
+});
+exports.default = EpubReader;

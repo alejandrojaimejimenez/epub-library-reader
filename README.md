@@ -288,10 +288,11 @@ import { EpubReader } from 'epub-library-reader';
 ```tsx
 import React, { useRef } from 'react';
 import { View, Button } from 'react-native';
-import { EpubReader } from 'epub-library-reader';
+import { EpubReader, EpubReaderRef } from 'epub-library-reader';
 
 export default function App() {
-  const epubRef = useRef(null);
+  // Usar la interfaz EpubReaderRef para tipar correctamente la referencia
+  const epubRef = useRef<EpubReaderRef>(null);
 
   const goToNextPage = () => {
     epubRef.current?.nextPage();
@@ -379,6 +380,43 @@ El componente expone los siguientes métodos que pueden ser accedidos a través 
 | `setTheme(theme)` | Cambia el tema ('light', 'dark', 'sepia') |
 | `setFontSize(size)` | Cambia el tamaño de fuente |
 | `setFontFamily(family)` | Cambia la familia de fuente |
+
+## Uso de referencias
+
+Para controlar el componente de manera programática, puedes usar referencias. El componente `EpubReader` está diseñado con `React.forwardRef()` para permitir el uso de referencias de manera segura:
+
+```tsx
+import { EpubReader, EpubReaderRef } from 'epub-library-reader';
+import React, { useRef } from 'react';
+
+// En tu componente
+const epubRef = useRef<EpubReaderRef>(null);
+
+// Y luego usarlo en la renderización
+<EpubReader
+  ref={epubRef}
+  source={{ uri: 'https://ejemplo.com/mi-libro.epub' }}
+/>
+
+// Ahora puedes llamar a los métodos de la referencia
+epubRef.current?.nextPage();
+epubRef.current?.setFontSize(20);
+```
+
+La interfaz `EpubReaderRef` expone los siguientes métodos:
+
+```typescript
+interface EpubReaderRef {
+  nextPage: () => void;
+  prevPage: () => void;
+  setLocation: (cfi: string) => void;
+  setTheme: (theme: 'light' | 'dark' | 'sepia') => void;
+  setFontSize: (size: number) => void;
+  setFontFamily: (fontFamily: string) => void;
+}
+```
+
+Esto te permite controlar completamente el comportamiento del lector desde componentes padres.
 
 ## Cómo funciona
 
