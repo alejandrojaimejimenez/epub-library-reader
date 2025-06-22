@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, SafeAreaView, Alert, Switch } from 'react-native';
 import EpubReader from './src/components/EpubReader';
 import { WebView } from 'react-native-webview';
@@ -68,10 +67,7 @@ export default function App() {
         <Text style={styles.infoItem}>• Archivos OPF (Open Packaging Format)</Text>
         <Text style={styles.infoItem}>• Datos Base64 codificados</Text>
         <Text style={styles.infoItem}>• URLs remotas</Text>
-        <Text style={styles.infoItem}>• Archivos locales</Text>
       </View>
-      
-      <StatusBar style="auto" />
     </View>
   );
 }

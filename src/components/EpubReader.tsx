@@ -10,24 +10,22 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
-import * as FileSystem from 'expo-file-system';
 
 interface EpubReaderProps {
   source: {
     uri?: string;
     base64?: string;
-    localPath?: string;  // Añadimos soporte para rutas de archivos locales
   };
   onLocationChange?: (cfi: string) => void;
   onReady?: () => void;
   onPress?: () => void;
-  onError?: (error: string) => void;  // Callback para manejar errores
+  onError?: (error: string) => void;
   width?: number;
   height?: number;
   defaultTheme?: 'light' | 'dark' | 'sepia';
   defaultFontSize?: number;
   defaultFontFamily?: string;
-  showControls?: boolean;  // Opción para mostrar/ocultar controles de navegación
+  showControls?: boolean;
 }
 
 const EpubReader: React.FC<EpubReaderProps> = ({
@@ -369,36 +367,16 @@ const EpubReader: React.FC<EpubReaderProps> = ({
             </script>
           </body>
         </html>
-      `;
-
-      let bookSource = '';
+      `;      let bookSource = '';
       
       if (source.uri) {
-        // Si recibimos una URI directa (URL remota o archivo local)
+        // Si recibimos una URI directa (URL remota)
         bookSource = source.uri;
       } else if (source.base64) {
         // Si recibimos datos en base64
         bookSource = source.base64;
-      } else if (source.localPath) {
-        // Si recibimos una ruta de archivo local
-        try {
-          // Verificar si el archivo existe
-          const fileInfo = await FileSystem.getInfoAsync(source.localPath);
-          if (!fileInfo.exists) {
-            throw new Error(`El archivo no existe: ${source.localPath}`);
-          }
-          
-          // Si estamos en Android o iOS, podemos usar file:// URL
-          if (Platform.OS !== 'web') {
-            bookSource = `file://${source.localPath}`;
-          } else {
-            throw new Error('La carga de archivos locales no está soportada en web sin conversión a base64');
-          }
-        } catch (err) {
-          throw new Error(`Error al acceder al archivo local: ${err instanceof Error ? err.message : String(err)}`);
-        }
       } else {
-        throw new Error('Se requiere una fuente válida (uri, base64 o localPath)');
+        throw new Error('Se requiere una fuente válida (uri o base64)');
       }
       
       // Establecer el contenido HTML
