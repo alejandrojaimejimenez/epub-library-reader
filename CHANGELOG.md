@@ -5,7 +5,14 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.4] - 2025-06-25
+## [0.1.5] - 2025-06-23
+
+### Corregido
+- Implementado componente ForwardedWebView para resolver correctamente el problema de referencias
+- Eliminado el error "Function components cannot be given refs" al usar WebView
+- Mejorada la integración con aplicaciones que utilizan React Native Web
+
+## [0.1.4] - 2025-06-23
 
 ### Corregido
 - Mejorado el soporte para referencias (refs) en el componente EpubReader

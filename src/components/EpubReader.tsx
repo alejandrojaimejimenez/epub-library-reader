@@ -11,6 +11,11 @@ import {
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 
+// Creamos un componente WebView con soporte para refs
+const ForwardedWebView = forwardRef<WebView, React.ComponentProps<typeof WebView>>((props, ref) => {
+  return <WebView {...props} ref={ref} />;
+});
+
 interface EpubReaderProps {
   source: {
     uri?: string;
@@ -546,10 +551,9 @@ const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0000ff" />
           <Text style={styles.loadingText}>Cargando libro...</Text>
-        </View>
-      )}      
+        </View>      )}      
       {bookContent && (
-        <WebView
+        <ForwardedWebView
           ref={webViewRef}
           originWhitelist={['*']}
           source={{ html: bookContent }}
