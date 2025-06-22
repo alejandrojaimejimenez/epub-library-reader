@@ -149,6 +149,7 @@ El componente `EpubReader` acepta las siguientes propiedades:
 | `width` | Number | Ancho del componente | No | Ancho de pantalla |
 | `height` | Number | Alto del componente | No | Alto de pantalla |
 | `showControls` | Boolean | Mostrar controles de navegación | No | true |
+| `initialLocation` | String | CFI para navegar a una posición específica al cargar | No | - |
 | `onLocationChange` | Function | Callback al cambiar de posición | No | - |
 | `onReady` | Function | Callback cuando el libro está listo | No | - |
 | `onPress` | Function | Callback al tocar el libro | No | - |
@@ -169,15 +170,71 @@ import { EpubReader } from 'epub-library-reader';
 />
 ```
 
-### Cargar un archivo OPF desde una URL
+### Cargar un archivo EPUB desde una URL con posición inicial
 
 ```tsx
 import { EpubReader } from 'epub-library-reader';
 
+// CFI ejemplo de posición guardada previamente
+const savedPosition = 'epubcfi(/6/14[chap4]!/4/2/2[id456]/6,/1:0,/3:32)';
+
 <EpubReader
-  source={{ uri: 'https://ejemplo.com/libro/package.opf' }}
+  source={{ uri: 'https://ejemplo.com/mi-libro.epub' }}
+  initialLocation={savedPosition}
   onReady={() => console.log('El libro está listo')}
+  onLocationChange={(cfi) => console.log('Nueva posición:', cfi)}
 />
+```
+
+### Cargar un libro y continuar desde la última posición
+
+```tsx
+import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
+import { EpubReader } from 'epub-library-reader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export default function BookReader() {
+  const [lastLocation, setLastLocation] = useState('');
+  const bookUrl = 'https://ejemplo.com/mi-libro.epub';
+  
+  // Cargar la última posición de lectura al iniciar
+  useEffect(() => {
+    const loadLastPosition = async () => {
+      try {
+        // Usar una clave única para cada libro
+        const storedLocation = await AsyncStorage.getItem(`book_location_${bookUrl}`);
+        if (storedLocation) {
+          setLastLocation(storedLocation);
+        }
+      } catch (error) {
+        console.error('Error al cargar la posición:', error);
+      }
+    };
+    
+    loadLastPosition();
+  }, []);
+  
+  // Guardar la posición actual al cambiar de ubicación
+  const handleLocationChange = async (cfi) => {
+    try {
+      await AsyncStorage.setItem(`book_location_${bookUrl}`, cfi);
+    } catch (error) {
+      console.error('Error al guardar la posición:', error);
+    }
+  };
+  
+  return (
+    <View style={{ flex: 1 }}>
+      <EpubReader
+        source={{ uri: bookUrl }}
+        initialLocation={lastLocation} // Pasar la última posición guardada
+        onLocationChange={handleLocationChange}
+        onReady={() => console.log('Libro cargado y listo')}
+      />
+    </View>
+  );
+}
 ```
 
 ### Cargar un archivo usando datos Base64

@@ -26,6 +26,7 @@ interface EpubReaderProps {
   defaultFontSize?: number;
   defaultFontFamily?: string;
   showControls?: boolean;
+  initialLocation?: string; // CFI para navegar a una posición específica al cargar
 }
 
 const EpubReader: React.FC<EpubReaderProps> = ({
@@ -40,6 +41,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
   defaultFontSize = 16,
   defaultFontFamily = 'system',
   showControls = true,
+  initialLocation,
 }) => {
   const webViewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(true);
@@ -180,8 +182,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({
                       message: 'Error al mostrar el contenido: ' + error.message
                     }));
                   });
-                  
-                  // Generar ubicaciones para el cálculo de páginas (opcional pero recomendado)
+                    // Generar ubicaciones para el cálculo de páginas (opcional pero recomendado)
                   book.ready.then(() => {
                     // Crear ubicaciones para cálculo más preciso del número de páginas
                     if (!book.locations.length()) {
@@ -190,17 +191,44 @@ const EpubReader: React.FC<EpubReaderProps> = ({
                           type: 'ready',
                           locations: book.locations.total
                         }));
+                        
+                        // Comprobar si hay una posición inicial para navegar
+                        if ('${initialLocation}') {
+                          setTimeout(() => {
+                            rendition.display('${initialLocation}').catch(error => {
+                              console.log('Error al navegar a la posición inicial:', error);
+                            });
+                          }, 100);
+                        }
                       }).catch(err => {
                         // Si falla la generación de ubicaciones, continuamos de todos modos
                         window.ReactNativeWebView.postMessage(JSON.stringify({
                           type: 'ready'
                         }));
+                        
+                        // Intentar navegar a la posición inicial de todas formas
+                        if ('${initialLocation}') {
+                          setTimeout(() => {
+                            rendition.display('${initialLocation}').catch(error => {
+                              console.log('Error al navegar a la posición inicial:', error);
+                            });
+                          }, 100);
+                        }
                       });
                     } else {
                       window.ReactNativeWebView.postMessage(JSON.stringify({
                         type: 'ready',
                         locations: book.locations.total
                       }));
+                      
+                      // Comprobar si hay una posición inicial para navegar
+                      if ('${initialLocation}') {
+                        setTimeout(() => {
+                          rendition.display('${initialLocation}').catch(error => {
+                            console.log('Error al navegar a la posición inicial:', error);
+                          });
+                        }, 100);
+                      }
                     }
                   }).catch(error => {
                     window.ReactNativeWebView.postMessage(JSON.stringify({
