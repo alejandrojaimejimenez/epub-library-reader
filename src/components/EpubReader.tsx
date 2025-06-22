@@ -9,10 +9,31 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import { WebView } from 'react-native-webview';
 
-// Creamos un componente WebView con soporte para refs
-const ForwardedWebView = forwardRef<WebView, React.ComponentProps<typeof WebView>>((props, ref) => {
+// Importación condicional de WebView para manejar plataformas no soportadas
+let WebView: any;
+let isWebViewSupported = false;
+
+// Intentamos importar WebView y verificamos si está disponible
+try {
+  // Intentamos importar WebView de manera dinámica
+  WebView = require('react-native-webview').WebView;
+  // Verificamos si WebView es un componente válido
+  isWebViewSupported = !!WebView;
+} catch (error) {
+  console.warn('react-native-webview no está disponible en esta plataforma');
+  isWebViewSupported = false;
+}
+
+// Componente WebView con soporte para refs, solo si WebView está disponible
+const ForwardedWebView = forwardRef<any, any>((props, ref) => {
+  if (!isWebViewSupported) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>WebView no está disponible en esta plataforma</Text>
+      </View>
+    );
+  }
   return <WebView {...props} ref={ref} />;
 });
 
@@ -59,7 +80,7 @@ const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
   showControls = true,
   initialLocation,
 }, ref) => {
-  const webViewRef = useRef<WebView>(null);
+  const webViewRef = useRef<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [bookContent, setBookContent] = useState<string | null>(null);
@@ -111,9 +132,18 @@ const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
       }
     }
   }));
-
   const prepareBook = async () => {
     try {
+      // Si WebView no está soportado, no intentamos preparar el libro
+      if (!isWebViewSupported) {
+        setError("React Native WebView no está disponible en esta plataforma");
+        if (onError) {
+          onError("React Native WebView no está disponible en esta plataforma");
+        }
+        setLoading(false);
+        return;
+      }
+      
       setLoading(true);
       setError(null);
 
@@ -536,11 +566,23 @@ const EpubReader = forwardRef<EpubReaderRef, EpubReaderProps>(({
       webViewRef.current.postMessage(message);
     }
   };
-
   if (error) {
     return (
       <View style={[styles.container, { width, height }]}>
         <Text style={styles.errorText}>Error: {error}</Text>
+      </View>
+    );
+  }
+
+  // Mostramos un mensaje específico si WebView no está soportado
+  if (!isWebViewSupported) {
+    return (
+      <View style={[styles.container, { width, height }, styles.unsupportedContainer]}>
+        <Text style={styles.errorText}>React Native WebView no está disponible en esta plataforma</Text>
+        <Text style={styles.infoText}>El lector EPUB requiere WebView para funcionar correctamente.</Text>
+        {Platform.OS !== 'web' && (
+          <Text style={styles.infoText}>Considera usar la versión nativa específica para esta plataforma.</Text>
+        )}
       </View>
     );
   }
@@ -626,6 +668,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 20,
     fontSize: 16,
+  },
+  infoText: {
+    color: '#666',
+    textAlign: 'center',
+    margin: 10,
+    fontSize: 14,
+  },
+  unsupportedContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   navigationControls: {
     flexDirection: 'row',

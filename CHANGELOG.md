@@ -5,6 +5,18 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2025-06-23
+
+### Añadido
+- Mejor manejo de plataformas donde WebView no está disponible
+- Mensajes de error específicos cuando la plataforma no es compatible
+- Detección automática de disponibilidad de react-native-webview
+
+### Corregido
+- Error "React Native WebView does not support this platform"
+- Mejorada la compatibilidad con plataformas no estándar
+- Ahora el componente muestra un mensaje de error apropiado en plataformas no soportadas
+
 ## [0.1.5] - 2025-06-23
 
 ### Corregido

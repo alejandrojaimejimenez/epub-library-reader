@@ -6,12 +6,38 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _reactNative = require("react-native");
-var _reactNativeWebview = require("react-native-webview");
 var _jsxRuntime = require("react/jsx-runtime");
 function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
-// Creamos un componente WebView con soporte para refs
+// Importación condicional de WebView para manejar plataformas no soportadas
+let WebView;
+let isWebViewSupported = false;
+
+// Intentamos importar WebView y verificamos si está disponible
+try {
+  // Intentamos importar WebView de manera dinámica
+  WebView = require('react-native-webview').WebView;
+  // Verificamos si WebView es un componente válido
+  isWebViewSupported = !!WebView;
+} catch (error) {
+  console.warn('react-native-webview no está disponible en esta plataforma');
+  isWebViewSupported = false;
+}
+
+// Componente WebView con soporte para refs, solo si WebView está disponible
 const ForwardedWebView = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
-  return /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNativeWebview.WebView, {
+  if (!isWebViewSupported) {
+    return /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.View, {
+      style: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
+      children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.Text, {
+        children: "WebView no est\xE1 disponible en esta plataforma"
+      })
+    });
+  }
+  return /*#__PURE__*/(0, _jsxRuntime.jsx)(WebView, {
     ...props,
     ref: ref
   });
@@ -104,6 +130,15 @@ const EpubReader = /*#__PURE__*/(0, _react.forwardRef)((_ref, ref) => {
   }));
   const prepareBook = async () => {
     try {
+      // Si WebView no está soportado, no intentamos preparar el libro
+      if (!isWebViewSupported) {
+        setError("React Native WebView no está disponible en esta plataforma");
+        if (onError) {
+          onError("React Native WebView no está disponible en esta plataforma");
+        }
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(null);
 
@@ -539,6 +574,26 @@ const EpubReader = /*#__PURE__*/(0, _react.forwardRef)((_ref, ref) => {
       })
     });
   }
+
+  // Mostramos un mensaje específico si WebView no está soportado
+  if (!isWebViewSupported) {
+    return /*#__PURE__*/(0, _jsxRuntime.jsxs)(_reactNative.View, {
+      style: [styles.container, {
+        width,
+        height
+      }, styles.unsupportedContainer],
+      children: [/*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.Text, {
+        style: styles.errorText,
+        children: "React Native WebView no est\xE1 disponible en esta plataforma"
+      }), /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.Text, {
+        style: styles.infoText,
+        children: "El lector EPUB requiere WebView para funcionar correctamente."
+      }), _reactNative.Platform.OS !== 'web' && /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNative.Text, {
+        style: styles.infoText,
+        children: "Considera usar la versi\xF3n nativa espec\xEDfica para esta plataforma."
+      })]
+    });
+  }
   return /*#__PURE__*/(0, _jsxRuntime.jsxs)(_reactNative.SafeAreaView, {
     style: [styles.container, {
       width,
@@ -631,6 +686,17 @@ const styles = _reactNative.StyleSheet.create({
     textAlign: 'center',
     margin: 20,
     fontSize: 16
+  },
+  infoText: {
+    color: '#666',
+    textAlign: 'center',
+    margin: 10,
+    fontSize: 14
+  },
+  unsupportedContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
   },
   navigationControls: {
     flexDirection: 'row',
