@@ -54,6 +54,12 @@ Luego puedes importarlo directamente:
 import { EpubReader } from 'epub-library-reader';
 ```
 
+Para proyectos JavaScript o si tienes problemas con TypeScript:
+
+```javascript
+import { EpubReader } from 'epub-library-reader/dist';
+```
+
 > **Nota importante:** Si encuentras problemas de instalación o conflictos de versiones, la instalación manual (opción 2) es más recomendable.
 
 ### Opción 2: Instalación manual (recomendada)
@@ -377,6 +383,15 @@ El componente expone los siguientes métodos que pueden ser accedidos a través 
 ## Cómo funciona
 
 Este componente utiliza [react-native-webview](https://github.com/react-native-webview/react-native-webview) como contenedor y [epubjs](https://github.com/futurepress/epub.js/) para procesar y renderizar los archivos EPUB. La comunicación entre React Native y WebView se realiza mediante mensajes, permitiendo el control del libro desde el lado de React Native.
+
+## Solución de problemas
+
+Si estás teniendo problemas al integrar o utilizar el componente, consulta nuestra [guía de solución de problemas](TROUBLESHOOTING.md) que incluye soluciones para:
+
+- Errores de importación en proyectos JavaScript
+- Problemas con TypeScript
+- Errores con react-native-reanimated
+- Configuración para diferentes tipos de proyectos
 
 ## Limitaciones
 
